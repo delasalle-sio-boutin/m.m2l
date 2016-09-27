@@ -66,8 +66,7 @@ switch($action){
 		include_once ('controleurs/CtrlDemanderMdp.php'); break;
 	}
 	case 'ConsulterSalles': {
-		//include_once ('controleurs/CtrlConsulterSalles.php'); break;
-		include_once ('controleurs/CtrlMenu.php'); break;	// ligne provisoire
+		include_once ('controleurs/CtrlConsulterSalles.php'); break;
 	}
 	case 'ConsulterReservations': {
 		include_once ('controleurs/CtrlConsulterReservations.php'); break;
