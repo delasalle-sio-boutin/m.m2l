@@ -1,0 +1,1 @@
+Le message est : "<?php echo $msg; ?>"
