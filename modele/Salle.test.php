@@ -25,6 +25,7 @@ $unCapacity = 25;
 $unAreaName = "Informatique - multimédia";
 $uneSalle = new Salle($unId, $unRoomName, $unCapacity, $unAreaName);
 
+echo ('<b>Récupération des valeurs de la salle dans la BDD (test de "get") <br></b>');
 echo ('$id : ' . $uneSalle->getId() . '<br>');
 echo ('$room_name : ' . $uneSalle->getRoom_name() . '<br>');
 echo ('$capacity : ' . $uneSalle->getCapacity() . '<br>');
@@ -32,6 +33,8 @@ echo ('$area_name : ' . $uneSalle->getAreaName() . '<br>');
 echo ('<br>');
 
 // tests des mutateurs (set)
+
+echo ('<b>Changement des valeurs de la salle (test de "set") <br></b>');
 $uneSalle->setId(6);
 $uneSalle->setRoom_name("Amphithéâtre");
 $uneSalle->setCapacity(200);
@@ -43,6 +46,7 @@ echo ('$capacity : ' . $uneSalle->getCapacity() . '<br>');
 echo ('$area_name : ' . $uneSalle->getAreaName() . '<br>');
 echo ('<br>');
 
+echo ('<b>Récapitulatif sur la salle (test de "toString") <br></b>');
 // test de la méthode toString
 echo ($uneSalle->toString());
 ?>
