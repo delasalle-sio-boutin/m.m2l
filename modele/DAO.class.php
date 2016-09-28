@@ -271,6 +271,60 @@ class DAO
 		// fourniture de la réponse
 		return $reponse;
 	}	
+	
+	// fournit un objet Utilisateur à partir de son nom $nomUser
+	// le résultat est fourni sous forme d'une collection d'objets Utilisateur
+	// modifié par Killian BOUTIN le 28/09/2016
+	public function getUtilisateur($nomUser)
+	{	// préparation de la requête de recherche
+		$txt_req = "Select id, level, name, password, email from mrbs_users where name = :nomUser";
+		$req = $this->cnx->prepare($txt_req);
+		// liaison de la requête et de ses paramètres
+		$req->bindValue("nomUser", $nomUser, PDO::PARAM_STR);		
+		// extraction des données
+		$req->execute();
+		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
+		
+		// construction d'une collection d'objets Reservation
+		$unUtilisateur = array();
+		// tant qu'une ligne est trouvée :
+		while ($uneLigne)
+		{	// création d'un objet Reservation
+			$unId = utf8_encode($uneLigne->id);
+			$unLevel = utf8_encode($uneLigne->level);
+			$unName = utf8_encode($uneLigne->name);
+			$unPassword = utf8_encode($uneLigne->password);
+			$unEmail = utf8_encode($uneLigne->email);
+			
+			$unUtilisateur = new Utilisateur($unId, $unLevel, $unName, $unPassword, $unEmail);
+			// ajout de la réservation à la collection
+			$uneUtilisateur[] = $unUtilisateur;
+			// extrait la ligne suivante
+			$uneLigne = $req->fetch(PDO::FETCH_OBJ);
+		}
+		// libère les ressources du jeu de données
+		$req->closeCursor();
+		// fourniture de la collection
+		return $unUtilisateur;
+	}
+	
+	// enregistre le nouveau mot de passe de l'utilisateur dans la bdd après l'avoir hashé en MD5
+	// modifié par Killian BOUTIN le 28/09/2016 
+	
+	public function modifierMdpUser($nomUser, $mdpUser)
+	{	// préparation de la requete
+		$txt_req = "Update mrbs_users
+					Set password = :mdpUser
+					Where name = :nomUser";
+		$req = $this->cnx->prepare($txt_req);
+		// liaison de la requête et de ses paramètres
+		$req->bindValue("mdpUser", md5($mdpUser), PDO::PARAM_STR);
+		$req->bindValue("nomUser", $nomUser, PDO::PARAM_STR);
+		// exécution de la requete
+		$ok = $req->execute();
+		return $ok;
+	}
+	
 
 	// teste si le digicode saisi ($digicodeSaisi) correspond bien à une réservation
 	// de la salle indiquée ($idSalle) pour l'heure courante

@@ -24,7 +24,7 @@ else {
 	}
 	else {
 		// récupération des données postées
-		if ( empty ($_POST ["txtName"]) == true)  $name = "";  else   $name = $_POST ["txtName"];
+		if ( empty ($_POST ["txtName"]) == true)  $txtName = "";  else   $txtName = $_POST ["txtName"];
 		if ( empty ($_POST ["txtAdrMail"]) == true)  $adrMail = "";  else   $adrMail = $_POST ["txtAdrMail"];
 		if ( empty ($_POST ["caseLevel"]) == true)  $level = "0";  else   $level = $_POST ["caseLevel"];
 		
