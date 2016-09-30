@@ -2,8 +2,8 @@
 // Projet Réservations M2L - version web mobile
 // fichier : modele/Salle.class.php
 // Rôle : la classe Salle représente les utilisateurs de l'application
-// Création : 20/09/2016 par Killian BOUTIN
-// Mise à jour : 20/09/2016 par Killian BOUTIN
+// Création : 26/09/2016 par Killian BOUTIN
+// Mise à jour : 26/09/2016 par Killian BOUTIN
 
 class Salle
 {
