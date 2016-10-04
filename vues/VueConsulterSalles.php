@@ -20,7 +20,6 @@
 			</div>
 			<div data-role="content">
 				<h4 style="text-align: center; margin-top: 0px; margin-bottom: 0px;"><?php echo $message;?></h4>
-				<p style="text-align: center;"><?php echo $message; ?></p>
 				<ul data-role="listview" style="margin-top: 5px;">
 				<?php
 				// Avec jQuery Mobile, les réservations sont affichées à l'aide d'une liste <ul>
