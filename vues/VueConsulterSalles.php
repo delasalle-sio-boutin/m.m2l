@@ -30,18 +30,9 @@
 				foreach ($lesSalles as $uneSalle)
 				{ ?>
 					<li><a href="#">
-					<h5>Réserv. n° <?php echo $uneReservation->getId(); ?></h5>
-					<p>Passée le <?php echo Outils::convertirEnDateFR(substr($uneReservation->getTimestamp(), 0, 10)); ?></p>
-					<p>Début : <?php echo date('d/m/Y H:i:s', $uneReservation->getStart_time()); ?></p>
-					<p>Fin : <?php echo date('d/m/Y H:i:s', $uneReservation->getEnd_time()); ?></p>
-					<p>Salle : <?php echo $uneReservation->getRoom_name(); ?></p>
-					<p>Etat : <?php if ($uneReservation->getStatus() == 0) 
-										echo 'confirmée';
-					 				else 
-					 					echo 'provisoire';?></p>
-					<?php if ($uneReservation->getStatus() == 0) 
-							// la classe "ui-li-aside" de JQuery Mobile permet de positionner un élément à droite
-							echo '<h5 class="ui-li-aside">Digicode ' . $uneReservation->getDigicode() . '</h5>';?>
+					<h5>Salle : <?php echo $uneSalle->getRoom_name(); ?></h5>
+					<p> Domaine : <?php echo $uneSalle->getAreaName();?></p>
+					<p class="ui-li-aside"> <?php echo $uneSalle->getCapacity();?> places </p>		
 					</a></li>
 				<?php
 				} ?>

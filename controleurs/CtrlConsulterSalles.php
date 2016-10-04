@@ -17,7 +17,7 @@ else {
 	$dao = new DAO();
 	
 	// récupération des salles libres depuis la classe DAO
-	$lesReservations = $dao->getLesSalles();
+	$lesSalles = $dao->getLesSalles();
 
 	// mémorisation du nombre de salles libres
 	$nbReponses = sizeof($lesSalles);
