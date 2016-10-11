@@ -133,8 +133,8 @@ echo "Existence de la réservation 12 : <b>" . $existe . "</b></p>";
 // test de la méthode existeUtilisateur -----------------------------------------------------------
 // modifié par Jim le 28/9/2015
 echo "<h3>Test de existeUtilisateur : </h3>";
-if ($dao->existeUtilisateur("admin")) $existe = "oui"; else $existe = "non";
-echo "<p>Existence de l'utilisateur 'admin' : <b>" . $existe . "</b><br>";
+if ($dao->existeUtilisateur("jim")) $existe = "oui"; else $existe = "non";
+echo "<p>Existence de l'utilisateur 'jim' : <b>" . $existe . "</b><br>";
 if ($dao->existeUtilisateur("xxxx")) $existe = "oui"; else $existe = "non";
 echo "Existence de l'utilisateur 'xxxx' : <b>" . $existe . "</b></p>";
 */
@@ -231,7 +231,7 @@ else
 */
 
 
-
+/*
 // test de la méthode modifierMdpUser -------------------------------------------------------------
 // modifié par Jim le 28/9/2015
 echo "<h3>Test de modifierMdpUser : </h3>";
@@ -250,7 +250,7 @@ if ($unUtilisateur) {
 }
 else
 	echo "<p>L'utilisateur admin n'existe pas !</p>";
-
+*/
 
 
 /*
