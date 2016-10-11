@@ -107,10 +107,10 @@ class DAO
 	// créé par Killian BOUTIN le 11/10/2016
 	public function aPasseDesReservations($nom)
 	{	// préparation de la requete de recherche
-		$txt_req = "SELECT count(*) FROM ae_eleves WHERE adrMail = :adrMail";
+		$txt_req = "SELECT count(*) FROM mrbs_entry WHERE create_by = :nom";
 		$req = $this->cnx->prepare($txt_req);
 		// liaison de la requête et de ses paramètres
-		$req->bindValue("adrMail", $adrMail, PDO::PARAM_STR);
+		$req->bindValue("nom", $nom, PDO::PARAM_STR);
 		// exécution de la requete
 		$req->execute();
 		$nbReponses = $req->fetchColumn(0);
@@ -398,10 +398,8 @@ class DAO
 		$req->execute();
 		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
 		
-		// construction d'une collection d'objets Reservation
-		$unUtilisateur = array();
 		// tant qu'une ligne est trouvée :
-		while ($uneLigne)
+		if ($uneLigne)
 		{	// création d'un objet Reservation
 			$unId = utf8_encode($uneLigne->id);
 			$unLevel = utf8_encode($uneLigne->level);
@@ -410,10 +408,10 @@ class DAO
 			$unEmail = utf8_encode($uneLigne->email);
 			
 			$unUtilisateur = new Utilisateur($unId, $unLevel, $unName, $unPassword, $unEmail);
-			// ajout de la réservation à la collection
-			$uneUtilisateur[] = $unUtilisateur;
-			// extrait la ligne suivante
-			$uneLigne = $req->fetch(PDO::FETCH_OBJ);
+		}
+		else {
+			$unUtilisateur = null;
+
 		}
 		// libère les ressources du jeu de données
 		$req->closeCursor();
@@ -439,6 +437,19 @@ class DAO
 		return $ok;
 	}
 	
+	// supprime l'utilisateur dans la BDD
+	// créé par Killian BOUTIN le 11/10/2016
+	public function supprimerUtilisateur($nom)
+	{	// préparation de la requete de suppression
+		$txt_req = "DELETE FROM mrbs_users WHERE name = :nom";
+		$req = $this->cnx->prepare($txt_req);
+		// liaison de la requête et de son paramètre
+		$req->bindValue("nom", $nom, PDO::PARAM_STR);
+		// exécution de la requete
+		$ok = $req->execute();
+		
+		return $ok;
+	}
 
 	// teste si le digicode saisi ($digicodeSaisi) correspond bien à une réservation
 	// de la salle indiquée ($idSalle) pour l'heure courante
