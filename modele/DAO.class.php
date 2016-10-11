@@ -75,32 +75,25 @@ class DAO
 	// -------------------------------------- Méthodes d'instances ------------------------------------------
 	// ------------------------------------------------------------------------------------------------------
 
-
+	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
+	// cette fonction peut dépanner en cas d'absence des triggers chargés de créer les digicodes
+	// modifié par Jim le 5/5/2015
 	
 	
+	// annule la réservation
+	// modifié par Erwann Bienvenu le 11/10/2016
+	public function annulerReservation($idReservation)
+	{	// préparation de la requete de recherche
+	$txt_req = "DELETE from mrbs_entry where id = :idReservation";
+	$req = $this->cnx->prepare($txt_req);
+	// liaison de la requête et de ses paramètres
+	$req->bindValue("idReservation", $idReservation, PDO::PARAM_STR);
+	// exécution de la requete
+	$ok = $req->execute();
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	// fourniture de la réponse
+	return $ok;
+	}
 	
 	
 	// fournit true si l'utilisateur a passé une réservation et false sinon
@@ -125,9 +118,6 @@ class DAO
 	}
 	
 	
-	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
-	// cette fonction peut dépanner en cas d'absence des triggers chargés de créer les digicodes
-	// modifié par Jim le 5/5/2015
 	public function creerLesDigicodesManquants()
 	{	// préparation de la requete de recherche des réservations sans digicode
 		$txt_req1 = "Select id from mrbs_entry where id not in (select id from mrbs_entry_digicode)";
@@ -155,6 +145,7 @@ class DAO
 		$req1->closeCursor();
 		return;
 	}
+	
 	
 	/*
 	 // mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
@@ -193,6 +184,7 @@ class DAO
 	 }
 	 */
 
+	
 	// enregistre l'utilisateur dans la bdd
 	// modifié par Jim le 26/5/2016
 	public function creerUtilisateur($unUtilisateur)
@@ -209,6 +201,52 @@ class DAO
 		return $ok;
 	}
 	
+
+	// dit si la réservation donnée est faite par l'utilisateur donné
+	// modifié par Erwann Bienvenu le 11/10/2016
+	public function estLeCreateur($nomUser,$idReservation)
+	{	// préparation de la requete de recherche
+	$txt_req = "Select count(*) from mrbs_entry where create_by = :nomUser AND id = :idReservation";
+	$req = $this->cnx->prepare($txt_req);
+	// liaison de la requête et de ses paramètres
+	$req->bindValue("nomUser", $nomUser, PDO::PARAM_STR);
+	$req->bindValue("idReservation", $idReservation, PDO::PARAM_STR);
+	// exécution de la requete
+	$req->execute();
+	$nbReponses = $req->fetchColumn(0);
+	// libère les ressources du jeu de données
+	$req->closeCursor();
+	
+	// fourniture de la réponse
+	if ($nbReponses == 0)
+		return false;
+		else
+			return true;
+	}
+	
+	
+	// dit si la réservation donnée existe
+	// modifié par Erwann Bienvenu le 11/10/2016
+	public function existeReservation($idReservation)
+	{	// préparation de la requete de recherche
+	$txt_req = "Select count(*) from mrbs_entry where id = :idReservation";
+	$req = $this->cnx->prepare($txt_req);
+	// liaison de la requête et de ses paramètres
+	$req->bindValue("idReservation", $idReservation, PDO::PARAM_STR);
+	// exécution de la requete
+	$req->execute();
+	$nbReponses = $req->fetchColumn(0);
+	// libère les ressources du jeu de données
+	$req->closeCursor();
+	
+	// fourniture de la réponse
+	if ($nbReponses == 0)
+		return false;
+		else
+			return true;
+	}
+	
+
 	// Envoie un mail a l'utilisateur avec son mot de passe
 	// créée par Tony le 11/10/16
 	public function envoyerMdp($nom, $nouveauMdp){
@@ -222,6 +260,8 @@ class DAO
 		}	
 		return $ok;
 	}
+
+	
 	// fournit true si l'utilisateur ($nomUser) existe, false sinon
 	// modifié par Jim le 5/5/2015
 	public function existeUtilisateur($nomUser)
@@ -243,6 +283,7 @@ class DAO
 			return true;
 	}
 
+	
 	// génération aléatoire d'un digicode de 6 caractères hexadécimaux
 	// modifié par Jim le 5/5/2015
 	public function genererUnDigicode()
@@ -261,6 +302,7 @@ class DAO
 		return $digicode;
 	}
 
+	
 	// fournit la liste des réservations à venir d'un utilisateur ($nomUser)
 	// le résultat est fourni sous forme d'une collection d'objets Reservation
 	// modifié par Jim le 30/9/2015
@@ -307,11 +349,7 @@ class DAO
 		return $lesReservations;
 	}
 	
-	
-	
-	
-	
-	
+
 	// fournit la liste des réservations à venir d'un utilisateur ($nomUser)
 	// le résultat est fourni sous forme d'une collection d'objets Reservation
 	// modifié par Jim le 30/9/2015
@@ -352,12 +390,42 @@ class DAO
 	}
 
 	
+	// fournit la réservation dont on fournit l'id
+	// le résultat est fourni sous forme d'une collection d'objets Reservation
+	// modifié par Erwann Bienvenu le 11/10/2016
 	
+	public function getReservation($idReservation)
+	{	// préparation de la requete de recherche
+	$txt_req = "Select mrbs_entry.id, timestamp, start_time, end_time, room_name, status, digicode";
+	$txt_req = $txt_req . " from mrbs_entry, mrbs_room, mrbs_entry_digicode";
+	$txt_req = $txt_req . " where mrbs_entry.id = :idReservation";
+	$txt_req = $txt_req . " and mrbs_entry.id = mrbs_entry_digicode.id";
+	$txt_req = $txt_req . " GROUP BY mrbs_entry.id";
 	
+	$req = $this->cnx->prepare($txt_req);
+	// liaison de la requête et de ses paramètres
+	$req->bindValue("idReservation", $idReservation, PDO::PARAM_STR);
+	// extraction des données
+	$req->execute();
+	$uneLigne = $req->fetch(PDO::FETCH_OBJ);
 	
-	
-	
-	
+	if ($uneLigne) {
+		
+		$unId = $uneLigne->id;
+		$unTimeStamp = utf8_encode($uneLigne->timestamp);
+		$unStartTime = utf8_encode($uneLigne->start_time);
+		$unEndTime = utf8_encode($uneLigne->end_time);
+		$unRoomName = utf8_encode($uneLigne->room_name);
+		$unStatus = utf8_encode($uneLigne->status);
+		$unDigicode = utf8_encode($uneLigne->digicode);
+		
+		$laReservation = new Reservation($unId, $unTimeStamp, $unStartTime, $unEndTime, $unRoomName, $unStatus, $unDigicode);
+	}
+	else{
+		$laReservation = null;
+	}
+	return $laReservation;
+	}
 	
 	// fournit le niveau d'un utilisateur identifié par $nomUser et $mdpUser
 	// renvoie "utilisateur" ou "administrateur" si authentification correcte, "inconnu" sinon
