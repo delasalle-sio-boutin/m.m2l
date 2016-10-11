@@ -40,34 +40,51 @@ else {
 			
 			if ( ! $dao->existeUtilisateur($name) ) {
 				// si le nom existe déjà, réaffichage de la vue
-				$message = "Utilisateur non existant !";
+				$message = "Nom d'utilisateur inexistant !";
 				$typeMessage = 'avertissement';
 				$themeFooter = $themeProbleme;
 				include_once ('vues/VueSupprimerUtilisateur.php');
 			}
 			else {
-				// envoi d'un mail de confirmation de l'enregistrement
-				$sujet = "Création de votre compte dans le système de réservation de M2L";
-				$contenuMail = "L'administrateur du système de réservations de la M2L vient de vous créer un compte utilisateur.\n\n";
-				$contenuMail .= "Les données enregistrées sont :\n\n";
-				$contenuMail .= "Votre nom : " . $name . "\n";
-				$contenuMail .= "Votre mot de passe : " . $password . " (nous vous conseillons de le changer lors de la première connexion)\n";
-				$contenuMail .= "Votre niveau d'accès (0 : invité    1 : utilisateur    2 : administrateur) : " . $level . "\n";
-					
-				$ok = Outils::envoyerMail($adrMail, $sujet, $contenuMail, $ADR_MAIL_EMETTEUR);
-				if ( ! $ok ) {
-					// si l'envoi de mail a échoué, réaffichage de la vue avec un message explicatif
-					$message = "Enregistrement effectué.<br>L'envoi du mail à l'utilisateur a rencontré un problème !";
+				
+				if ( $dao->aPasseDesReservations($name) ){
+					$message = "Cet utilisateur a passé des réservations à venir !";
 					$typeMessage = 'avertissement';
 					$themeFooter = $themeProbleme;
 					include_once ('vues/VueSupprimerUtilisateur.php');
 				}
-				else {
-					// tout a fonctionné
-					$message = "Enregistrement effectué.<br>Un mail va être envoyé à l'utilisateur !";
-					$typeMessage = 'information';
-					$themeFooter = $themeNormal;
-					include_once ('vues/VueSupprimerUtilisateur.php');
+				else{
+					$unUtilisateur = $dao->getUtilisateur($name);
+					$adrMail = $unUtilisateur->getEmail();
+					
+					$ok = $dao->supprimerUtilisateur($name);
+					
+					if ( !$ok ){
+						$message = "Problème lors de la suppression de l'utilisateur !";
+						$typeMessage = 'avertissement';
+						$themeFooter = $themeProbleme;
+						include_once ('vues/VueSupprimerUtilisateur.php');
+					}
+					else{
+						// envoi d'un mail de confirmation de l'enregistrement
+						$sujet = "Suppression de votre compte du système de réservation de M2L";
+						$contenuMail = "L'administrateur du système de réservations de la M2L vient de supprimer votre compte utilisateur.\n\n";
+						$ok = Outils::envoyerMail($adrMail, $sujet, $contenuMail, $ADR_MAIL_EMETTEUR);
+						if ( ! $ok ) {
+							// si l'envoi de mail a échoué, réaffichage de la vue avec un message explicatif
+							$message = "Suppression effectuée.<br>L'envoi du mail à l'utilisateur a rencontré un problème !";
+							$typeMessage = 'avertissement';
+							$themeFooter = $themeProbleme;
+							include_once ('vues/VueSupprimerUtilisateur.php');
+						}
+						else {
+							// tout a fonctionné
+							$message = "Suppression effectuée.<br>Un mail va être envoyé à l'utilisateur !";
+							$typeMessage = 'information';
+							$themeFooter = $themeNormal;
+							include_once ('vues/VueSupprimerUtilisateur.php');
+						}
+					}
 				}
 			}
 			unset($dao);		// fermeture de la connexion à MySQL
