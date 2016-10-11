@@ -52,7 +52,7 @@
 						</fieldset>
 					</div>
 					<div data-role="fieldcontain">
-						<input type="submit" name="btnCrerUtilisateur" id="btnCrerUtilisateur" value="Créer l'utilisateur" data-mini="true">
+						<input type="submit" name="btnCreerUtilisateur" id="btnCreerUtilisateur" value="Créer l'utilisateur" data-mini="true">
 					</div>
 				</form>
 
