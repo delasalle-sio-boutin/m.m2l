@@ -160,7 +160,20 @@ class DAO
 		$ok = $req->execute();
 		return $ok;
 	}
-
+	
+	// Envoie un mail a l'utilisateur avec son mot de passe
+	// créée par Tony le 11/10/16
+	public function envoyerMdp($nom, $nouveauMdp){
+		if (dao::existeUtilisateur($nom) == true){
+			$unUtilisateur = $this->getUtilisateur($nom);
+			$adresseDestinataire = $unUtilisateur->getEmail();
+			$sujet = "Nouveau mot de passe";
+			$message = "Votre nouveau mot de passe est : ".$nouveauMdp;
+			$adresseEmetteur = "delasalle.sio.eleve@gmail.com";
+			$ok = Outils::envoyerMail ($adresseDestinataire, $sujet, $message,"From : ".$adresseEmetteur);
+		}	
+		return $ok;
+	}
 	// fournit true si l'utilisateur ($nomUser) existe, false sinon
 	// modifié par Jim le 5/5/2015
 	public function existeUtilisateur($nomUser)
@@ -374,6 +387,7 @@ class DAO
 		$req->bindValue("nomUser", $nomUser, PDO::PARAM_STR);
 		// exécution de la requete
 		$ok = $req->execute();
+		
 		return $ok;
 	}
 	
