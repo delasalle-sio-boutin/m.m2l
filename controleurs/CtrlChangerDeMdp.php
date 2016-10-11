@@ -28,15 +28,31 @@ else{
 		include_once ('vues/VueChangerDeMdp.php');
 	}
 	else{
-		
+		include_once ('modele/DAO.class.php');
+		$dao = new DAO();
 		if ( empty ($_POST ["txtMotDePasseConf"]) == true)  $mdpConf = "";  else   $mdpConf = $_POST ["txtMotDePasseConf"];
 		if ( empty ($_POST ["txtMotDePasse"]) == true)  $mdp = "";  else   $mdp = $_POST ["txtMotDePasse"];
 		if ( empty ($_POST ["caseAfficherMdp"]) == true)  $afficherMdp = "off";  else   $afficherMdp = $_POST ["caseAfficherMdp"];
-		$message = 'Mot de passe modifié';
-		$typeMessage = 'information';
-		$themeFooter = $themeNormal;
-		$niveauUtilisateur = '';
-		include_once ('vues/VueChangerDeMdp.php');
+		$utilisateur = $_SESSION['nom'];
+		
+		$dao->modifierMdpUser($utilisateur, $mdpConf);
+		$ok = $dao->envoyerMdp($utilisateur, $mdpConf);
+		if ($ok == true){
+			$message = 'Enregistrement effectué.<br>Vous allez recevoir un mail de confirmation.';
+			$typeMessage = 'information';
+			$themeFooter = $themeNormal;
+			$niveauUtilisateur = '';
+			include_once ('vues/VueChangerDeMdp.php');
+			
+		} else {
+			$message = "Enregistrement effectué.<br>L'envoi du mail de confirmation a rencontré un problème. ";
+			$typeMessage = 'avertissement';
+			$themeFooter = $themeNormal;
+			$niveauUtilisateur = '';
+			include_once ('vues/VueChangerDeMdp.php');
+			
+		}
+		
 	}
 		
 }

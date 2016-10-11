@@ -79,6 +79,7 @@ class DAO
 	// cette fonction peut dépanner en cas d'absence des triggers chargés de créer les digicodes
 	// modifié par Jim le 5/5/2015
 	
+	
 	// annule la réservation
 	// modifié par Erwann Bienvenu le 11/10/2016
 	public function annulerReservation($idReservation)
@@ -92,6 +93,28 @@ class DAO
 	
 	// fourniture de la réponse
 	return $ok;
+	}
+	
+	
+	// fournit true si l'utilisateur a passé une réservation et false sinon
+	// créé par Killian BOUTIN le 11/10/2016
+	public function aPasseDesReservations($nom)
+	{	// préparation de la requete de recherche
+		$txt_req = "SELECT count(*) FROM ae_eleves WHERE adrMail = :adrMail";
+		$req = $this->cnx->prepare($txt_req);
+		// liaison de la requête et de ses paramètres
+		$req->bindValue("adrMail", $adrMail, PDO::PARAM_STR);
+		// exécution de la requete
+		$req->execute();
+		$nbReponses = $req->fetchColumn(0);
+		// libère les ressources du jeu de données
+		$req->closeCursor();
+		
+		// fourniture de la réponse
+		if ($nbReponses == 0)
+			return false;
+		else
+			return true;
 	}
 	
 	
@@ -122,6 +145,7 @@ class DAO
 		$req1->closeCursor();
 		return;
 	}
+	
 	
 	/*
 	 // mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
@@ -160,6 +184,7 @@ class DAO
 	 }
 	 */
 
+	
 	// enregistre l'utilisateur dans la bdd
 	// modifié par Jim le 26/5/2016
 	public function creerUtilisateur($unUtilisateur)
@@ -176,6 +201,7 @@ class DAO
 		return $ok;
 	}
 	
+
 	// dit si la réservation donnée est faite par l'utilisateur donné
 	// modifié par Erwann Bienvenu le 11/10/2016
 	public function estLeCreateur($nomUser,$idReservation)
@@ -220,8 +246,22 @@ class DAO
 			return true;
 	}
 	
-	
 
+	// Envoie un mail a l'utilisateur avec son mot de passe
+	// créée par Tony le 11/10/16
+	public function envoyerMdp($nom, $nouveauMdp){
+		if (dao::existeUtilisateur($nom) == true){
+			$unUtilisateur = $this->getUtilisateur($nom);
+			$adresseDestinataire = $unUtilisateur->getEmail();
+			$sujet = "Nouveau mot de passe";
+			$message = "Votre nouveau mot de passe est : ".$nouveauMdp;
+			$adresseEmetteur = "delasalle.sio.eleve@gmail.com";
+			$ok = Outils::envoyerMail ($adresseDestinataire, $sujet, $message,"From : ".$adresseEmetteur);
+		}	
+		return $ok;
+	}
+
+	
 	// fournit true si l'utilisateur ($nomUser) existe, false sinon
 	// modifié par Jim le 5/5/2015
 	public function existeUtilisateur($nomUser)
@@ -243,6 +283,7 @@ class DAO
 			return true;
 	}
 
+	
 	// génération aléatoire d'un digicode de 6 caractères hexadécimaux
 	// modifié par Jim le 5/5/2015
 	public function genererUnDigicode()
@@ -261,6 +302,7 @@ class DAO
 		return $digicode;
 	}
 
+	
 	// fournit la liste des réservations à venir d'un utilisateur ($nomUser)
 	// le résultat est fourni sous forme d'une collection d'objets Reservation
 	// modifié par Jim le 30/9/2015
@@ -307,11 +349,7 @@ class DAO
 		return $lesReservations;
 	}
 	
-	
-	
-	
-	
-	
+
 	// fournit la liste des réservations à venir d'un utilisateur ($nomUser)
 	// le résultat est fourni sous forme d'une collection d'objets Reservation
 	// modifié par Jim le 30/9/2015
@@ -351,6 +389,7 @@ class DAO
 	return $lesSalles;
 	}
 
+	
 	// fournit la réservation dont on fournit l'id
 	// le résultat est fourni sous forme d'une collection d'objets Reservation
 	// modifié par Erwann Bienvenu le 11/10/2016
@@ -464,6 +503,7 @@ class DAO
 		$req->bindValue("nomUser", $nomUser, PDO::PARAM_STR);
 		// exécution de la requete
 		$ok = $req->execute();
+		
 		return $ok;
 	}
 	
