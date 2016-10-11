@@ -49,11 +49,11 @@ if ($ok)
 	echo "<p>zenelsy a bien passé des réservations !<br>";
 else
 	echo "<p>zenelsy n'a pas passé de réservations !<br>";
-$ok = $dao->aPasseDesReservations("jim");
+$ok = $dao->aPasseDesReservations("admin");
 if ($ok)
-	echo "jim a bien passé des réservations !</p>";
+	echo "admin a bien passé des réservations !</p>";
 else
-	echo "jim n'a pas passé de réservations !</p>";
+	echo "admin n'a pas passé de réservations !</p>";
 */
 
 
@@ -195,17 +195,17 @@ $niveauUtilisateur = $dao->getNiveauUtilisateur('admin', 'adminnnnn');
 echo "NiveauUtilisateur de ('admin', 'adminnnnn') : <b>" . $niveauUtilisateur . "</b><br>";
 $niveauUtilisateur = $dao->getNiveauUtilisateur('guesdonm', 'passe');
 echo "NiveauUtilisateur de ('guesdonm', 'passe') : <b>" . $niveauUtilisateur . "</b></p>";
-/*
+*/
 
 /*
 // test de la méthode getReservation --------------------------------------------------------------
 // modifié par Jim le 25/9/2015
 echo "<h3>Test de getReservation : </h3>";
-$laReservation = $dao->getReservation("11");
+$laReservation = $dao->getReservation("2");
 if ($laReservation) 
-	echo "<p>La réservation 11 existe : <br>" . $laReservation->toString() . "</p>";
+	echo "<p>La réservation 2 existe : <br>" . $laReservation->toString() . "</p>";
 else
-	echo "<p>La réservation 11 n'existe pas !</p>";	
+	echo "<p>La réservation 2 n'existe pas !</p>";	
 $laReservation = $dao->getReservation("12");
 if ($laReservation) 
 	echo "<p>La réservation 12 existe : <br>" . $laReservation->toString() . "</p>";
