@@ -19,16 +19,16 @@
 include_once ('DAO.class.php');
 $dao = new DAO();
 
-
 /*
+
 // test de la méthode annulerReservation --------------------------------------------------------
 // pour ce test, utiliser une réservation existante
 // modifié par Jim le 28/9/2015
 echo "<h3>Test de annulerReservation : </h3>";
-$laReservation = $dao->getReservation("1");
+$laReservation = $dao->getReservation("6");
 if ($laReservation) {
-	$dao->annulerReservation("1");
-	$laReservation = $dao->getReservation("1");
+	$dao->annulerReservation("6");
+	$laReservation = $dao->getReservation("6");
 	if ($laReservation)
 		echo "La réservation 1 n'a pas été supprimée !</p>";
 	else
@@ -57,7 +57,7 @@ else
 */
 
 
-/*
+
 // test de la méthode confirmerReservation --------------------------------------------------------
 // pour ce test, utiliser une réservation dont le champ status est mis auparavant à 4 (état provisoire)
 // modifié par Jim le 28/9/2015
@@ -71,7 +71,7 @@ if ($laReservation) {
 }
 else
 	echo "<p>La réservation 1 n'existe pas !</p>";
-*/
+
 
 /*
 // test de la méthode creerLesDigicodesManquants --------------------------------------------------

@@ -117,6 +117,29 @@ class DAO
 			return true;
 	}
 	
+	// Confirme la réservation
+	// créé par Tony BRAY le 14/10/2016
+	public function confirmerReservation($id){
+		$txt_req = "select status from mrbs_entry where id = :id";
+		$req = $this->cnx->prepare($txt_req);
+		$req->bindValue("id", $id, PDO::PARAM_INT);
+		$statut = $req->execute();
+		$statut = $req->fetchColumn(0);
+		$ok = false;
+		if ($statut == 4){
+			//preparation
+			$txt_req = "update mrbs_entry set status = 0 where id = :id";
+			$req = $this->cnx->prepare($txt_req);
+			// liaison de la requête et de ses paramètres
+			$req->bindValue("id", $id, PDO::PARAM_INT);
+			$ok = $req->execute();
+			
+		}
+		
+		
+		return $ok;
+	}
+	
 	
 	public function creerLesDigicodesManquants()
 	{	// préparation de la requete de recherche des réservations sans digicode
