@@ -63,6 +63,7 @@ $idReservation = $_POST ["numReservation"];
 				$message = 'Réservation confirmée.';
 				$typeMessage = 'information';
 				$themeFooter = $themeNormal;
+				$dao->creerLesDigicodesManquants();
 				include_once ('vues/VueConfirmerReservation.php');
 			}
 			else{
