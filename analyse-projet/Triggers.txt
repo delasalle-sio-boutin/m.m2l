@@ -1,0 +1,18 @@
+TRIGGER APRES CREATION DE RESERVATION
+
+CREATE TRIGGER apresCreationReservation AFTER INSERT ON mrbs_entry FOR EACH ROW BEGIN
+	DECLARE id integer;
+    DECLARE digicode char(6);
+    SET id = NEW.id;
+    SET digicode = UCASE(SUBSTRING(MD5(RAND()) FROM 1 FOR 6));
+	INSERT INTO mrbs_entry_digicode VALUES (id, digicode);
+END
+
+TRIGGER APRES SUPPRESSION DE RESERVATION
+
+CREATE TRIGGER apresSuppressionReservation AFTER DELETE ON mrbs_entry FOR EACH ROW
+BEGIN
+	DECLARE idOld integer;
+    SET idOld = OLD.id;
+	DELETE FROM mrbs_entry_digicode WHERE id = idOld;
+END
