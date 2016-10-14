@@ -39,41 +39,37 @@ $idReservation = $_POST ["numReservation"];
 				$themeFooter = $themeNormal;
 			
 				include_once ('vues/VueConfirmerReservation.php');
-				
-				
 			}
-		else {
-		$laReservation = $dao->getReservation($idReservation);
-		$laDateReservation = $laReservation->getEnd_time();
-		
-		if ($laDateReservation <= time()){
-			$message = "Annulation impossible, la réservation est passée.";
-			$typeMessage = 'avertissement';
-			$themeFooter = $themeNormal;
-			include_once ('vues/VueConfirmerReservation.php');
-		}
-		
 			
-		
-		else {
-			// Si la réservation existe et a été faite par l'utilisateur elle est annulée
-			$ok = $dao->confirmerReservation($idReservation);
+			else {
+				$laReservation = $dao->getReservation($idReservation);
+				$laDateReservation = $laReservation->getEnd_time();
 				
-			if ($ok) {
-				$message = 'Réservation confirmée.';
-				$typeMessage = 'information';
-				$themeFooter = $themeNormal;
-				$dao->creerLesDigicodesManquants();
-				include_once ('vues/VueConfirmerReservation.php');
-			}
-			else{
-				$message = 'Réservation déjâ confirmée.';
-				$typeMessage = 'avertissement';
-				$themeFooter = $themeNormal;
-				include_once ('vues/VueConfirmerReservation.php');
-				
-				
+				if ($laDateReservation <= time()){
+					$message = "Annulation impossible, la réservation est passée.";
+					$typeMessage = 'avertissement';
+					$themeFooter = $themeNormal;
+					include_once ('vues/VueConfirmerReservation.php');
+				}
+			
+				else {
+					// Si la réservation existe et a été faite par l'utilisateur elle est annulée
+					$ok = $dao->confirmerReservation($idReservation);
+						
+					if ($ok) {
+						$message = 'Réservation confirmée.';
+						$typeMessage = 'information';
+						$themeFooter = $themeNormal;
+						$dao->creerLesDigicodesManquants();
+						include_once ('vues/VueConfirmerReservation.php');
+					}
+					else {
+						$message = 'Cette réservation est déjà confirmée !';
+						$typeMessage = 'avertissement';
+						$themeFooter = $themeNormal;
+						include_once ('vues/VueConfirmerReservation.php');
+					}
+				}
 			}
 		}
-		}
-	}}
+}

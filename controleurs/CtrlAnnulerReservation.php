@@ -30,7 +30,6 @@ else
 		$laDateReservation = $laReservation->getEnd_time();		
 		
 		if ($laDateReservation <= time()){
-			echo $laDateReservation . "<br>" . time();
 			$message = "Annulation impossible, la réservation est passée.";
 			$typeMessage = 'avertissement';
 			$themeFooter = $themeNormal;

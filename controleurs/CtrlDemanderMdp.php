@@ -33,6 +33,7 @@ else {
 			
 		if ( ! $dao->existeUtilisateur($_POST ["txtName"]) ) {
 			// si le nom n'existe pas, on demande a l'utilisateur d'entrer un bon nom
+			$name = $_POST ["txtName"];
 			$message = "Nom d'utilisateur incorrect, merci de réessayer !";
 			$typeMessage = 'avertissement';
 			$themeFooter = $themeProbleme;

@@ -277,7 +277,9 @@ class DAO
 			$unUtilisateur = $this->getUtilisateur($nom);
 			$adresseDestinataire = $unUtilisateur->getEmail();
 			$sujet = "Nouveau mot de passe";
-			$message = "Votre nouveau mot de passe est : ".$nouveauMdp;
+			$message = "Nouvelles données vous concernant :" . "<br>";
+			$message .= "Votre nom : ". $nom . "<br>";
+			$message .= "Votre nouveau mot de passe : ".$nouveauMdp;
 			$adresseEmetteur = "delasalle.sio.eleve@gmail.com";
 			$ok = Outils::envoyerMail ($adresseDestinataire, $sujet, $message,"From : ".$adresseEmetteur);
 		}	
@@ -382,7 +384,8 @@ class DAO
 	$txt_req = $txt_req . " FROM mrbs_room,mrbs_area,mrbs_entry";
 	$txt_req = $txt_req . " WHERE mrbs_room.area_id = mrbs_area.id";
 	$txt_req = $txt_req . " AND mrbs_room.id NOT IN (SELECT id FROM mrbs_entry)";
-	$txt_req = $txt_req . " GROUP BY mrbs_room.id;";
+	$txt_req = $txt_req . " GROUP BY mrbs_room.room_name";
+	$txt_req = $txt_req . " ORDER BY mrbs_area.area_name, mrbs_room.room_name;";
 	
 	$req = $this->cnx->query($txt_req);
 	// liaison de la requête et de ses paramètres
@@ -532,14 +535,49 @@ class DAO
 	// créé par Killian BOUTIN le 11/10/2016
 	public function supprimerUtilisateur($nom)
 	{	// préparation de la requete de suppression
-		$txt_req = "DELETE FROM mrbs_users WHERE name = :nom";
-		$req = $this->cnx->prepare($txt_req);
-		// liaison de la requête et de son paramètre
-		$req->bindValue("nom", $nom, PDO::PARAM_STR);
-		// exécution de la requete
-		$ok = $req->execute();
+		$ok = $this->getUtilisateur($nom);
 		
+		if ($ok){
+			$txt_req = "DELETE FROM mrbs_users WHERE name = :nom";
+			$req = $this->cnx->prepare($txt_req);
+			// liaison de la requête et de son paramètre
+			$req->bindValue("nom", $nom, PDO::PARAM_STR);
+			// exécution de la requete
+			$ok = $req->execute();
+			
+		}
 		return $ok;
+	}
+	
+	// teste si le digicode saisi ($digicodeSaisi) correspond bien à une réservation pour l'heure courante
+	// fournit la valeur 0 si le digicode n'est pas bon, 1 si le digicode est bon
+	// créé par Killian BOUTIN 14/10/2016
+	public function testerDigicodeBatiment($digicodeSaisi)
+	{	global $DELAI_DIGICODE;
+		// préparation de la requete de recherche
+		$txt_req = "Select count(*)";
+		$txt_req = $txt_req . " from mrbs_entry, mrbs_entry_digicode";
+		$txt_req = $txt_req . " where mrbs_entry.id = mrbs_entry_digicode.id";
+		$txt_req = $txt_req . " and digicode = :digicodeSaisi";
+		$txt_req = $txt_req . " and (start_time - :delaiDigicode) < " . time();
+		$txt_req = $txt_req . " and (end_time + :delaiDigicode) > " . time();
+		
+		$req = $this->cnx->prepare($txt_req);
+		// liaison de la requête et de ses paramètres
+		$req->bindValue("digicodeSaisi", $digicodeSaisi, PDO::PARAM_STR);
+		$req->bindValue("delaiDigicode", $DELAI_DIGICODE, PDO::PARAM_INT);
+		
+		// exécution de la requete
+		$req->execute();
+		$nbReponses = $req->fetchColumn(0);
+		// libère les ressources du jeu de données
+		$req->closeCursor();
+		
+		// fourniture de la réponse
+		if ($nbReponses == 0)
+			return "0";
+		else
+			return "1";
 	}
 
 	// teste si le digicode saisi ($digicodeSaisi) correspond bien à une réservation

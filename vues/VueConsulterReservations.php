@@ -36,9 +36,9 @@
 					<p>Fin : <?php echo date('d/m/Y H:i:s', $uneReservation->getEnd_time()); ?></p>
 					<p>Salle : <?php echo $uneReservation->getRoom_name(); ?></p>
 					<p>Etat : <?php if ($uneReservation->getStatus() == 0) 
-										echo 'confirmée';
+										echo 'Confirmée';
 					 				else 
-					 					echo 'provisoire';?></p>
+					 					echo 'Provisoire';?></p>
 					<?php if ($uneReservation->getStatus() == 0) 
 							// la classe "ui-li-aside" de JQuery Mobile permet de positionner un élément à droite
 							echo '<h5 class="ui-li-aside">Digicode ' . $uneReservation->getDigicode() . '</h5>';?>
