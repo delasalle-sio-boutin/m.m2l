@@ -12,7 +12,6 @@ include_once ('vues/VueAnnulerReservation.php');
 }
 else
 {
-
 	$idReservation = $_POST ["txtReservation"];
 	$nomUtilisateur = $_SESSION['nom'];
 	
@@ -25,35 +24,39 @@ else
 		include_once ('vues/VueAnnulerReservation.php');	
 	}
 	else {
-		
+
 		
 		$laReservation = $dao->getReservation($idReservation);
-		$laDateReservation = $laReservation->getEnd_time();
+		$laDateReservation = $laReservation->getEnd_time();		
 		
 		if ($laDateReservation <= time()){
+			echo $laDateReservation . "<br>" . time();
 			$message = "Annulation impossible, la réservation est passée.";
 			$typeMessage = 'avertissement';
 			$themeFooter = $themeNormal;
 			include_once ('vues/VueAnnulerReservation.php');
 		}
-		// On teste si l'utilisateur est le créateur de la réservation
-		if ( !$dao->estLeCreateur($nomUtilisateur,$idReservation)){
-			$message = "Annulation impossible, vous n'êtes pas le créateur.";
-			$typeMessage = 'avertissement';
-			$themeFooter = $themeNormal;
-			include_once ('vues/VueAnnulerReservation.php');
-		}
-		
-		else {
-			// Si la réservation existe et a été faite par l'utilisateur elle est annulée
-			$ok = $dao->annulerReservation($idReservation);
-			
-			if ($ok) {
-				$message = 'Réservation annulée.';
-				$typeMessage = 'information';
+		else{
+			// On teste si l'utilisateur est le créateur de la réservation
+			if ( !$dao->estLeCreateur($nomUtilisateur,$idReservation)){
+				$message = "Annulation impossible, vous n'êtes pas le créateur.";
+				$typeMessage = 'avertissement';
 				$themeFooter = $themeNormal;
 				include_once ('vues/VueAnnulerReservation.php');
 			}
+		
+			else {
+				// Si la réservation existe et a été faite par l'utilisateur elle est annulée
+				$ok = $dao->annulerReservation($idReservation);
+				
+				if ($ok) {
+					$message = 'Réservation annulée.';
+					$typeMessage = 'information';
+					$themeFooter = $themeNormal;
+					include_once ('vues/VueAnnulerReservation.php');
+				}
+			}
 		}
+		
 	}
 }
