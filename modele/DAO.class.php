@@ -377,42 +377,41 @@ class DAO
 
 	// fournit la liste des réservations à venir d'un utilisateur ($nomUser)
 	// le résultat est fourni sous forme d'une collection d'objets Reservation
-	// modifié par Jim le 30/9/2015
+	// modifié par Killian BOUTIN le 14/10/2016
 	public function getLesSalles()
 	{	// préparation de la requete de recherche
-	$txt_req = "SELECT mrbs_room.id,mrbs_room.room_name,mrbs_room.capacity,mrbs_area.area_name";
-	$txt_req = $txt_req . " FROM mrbs_room,mrbs_area,mrbs_entry";
-	$txt_req = $txt_req . " WHERE mrbs_room.area_id = mrbs_area.id";
-	$txt_req = $txt_req . " AND mrbs_room.id NOT IN (SELECT id FROM mrbs_entry)";
-	$txt_req = $txt_req . " GROUP BY mrbs_room.room_name";
-	$txt_req = $txt_req . " ORDER BY mrbs_area.area_name, mrbs_room.room_name;";
-	
-	$req = $this->cnx->query($txt_req);
-	// liaison de la requête et de ses paramètres
-	// extraction des données
-	$req->execute();
-	$uneLigne = $req->fetch(PDO::FETCH_OBJ);
-	
-	// construction d'une collection d'objets Reservation
-	$lesSalles = array();
-	// tant qu'une ligne est trouvée :
-	while ($uneLigne)
-	{	// création d'un objet Reservation
-	$unId = utf8_encode($uneLigne->id);
-	$unRoomName = utf8_encode($uneLigne->room_name);
-	$unCapacity = utf8_encode($uneLigne->capacity);
-	$unAreaName = utf8_encode($uneLigne->area_name);
-	
-	$uneSalle = new Salle($unId,$unRoomName, $unCapacity, $unAreaName);
-	// ajout de la réservation à la collection
-	$lesSalles[] = $uneSalle;
-	// extrait la ligne suivante
-	$uneLigne = $req->fetch(PDO::FETCH_OBJ);
-	}
-	// libère les ressources du jeu de données
-	$req->closeCursor();
-	// fourniture de la collection
-	return $lesSalles;
+		$txt_req = "SELECT mrbs_room.id,mrbs_room.room_name,mrbs_room.capacity,mrbs_area.area_name";
+		$txt_req = $txt_req . " FROM mrbs_room,mrbs_area,mrbs_entry";
+		$txt_req = $txt_req . " WHERE mrbs_room.area_id = mrbs_area.id";
+		$txt_req = $txt_req . " GROUP BY mrbs_room.room_name";
+		$txt_req = $txt_req . " ORDER BY mrbs_area.area_name, mrbs_room.room_name;";
+		
+		$req = $this->cnx->query($txt_req);
+		// liaison de la requête et de ses paramètres
+		// extraction des données
+		$req->execute();
+		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
+		
+		// construction d'une collection d'objets Reservation
+		$lesSalles = array();
+		// tant qu'une ligne est trouvée :
+		while ($uneLigne)
+		{	// création d'un objet Reservation
+		$unId = utf8_encode($uneLigne->id);
+		$unRoomName = utf8_encode($uneLigne->room_name);
+		$unCapacity = utf8_encode($uneLigne->capacity);
+		$unAreaName = utf8_encode($uneLigne->area_name);
+		
+		$uneSalle = new Salle($unId,$unRoomName, $unCapacity, $unAreaName);
+		// ajout de la réservation à la collection
+		$lesSalles[] = $uneSalle;
+		// extrait la ligne suivante
+		$uneLigne = $req->fetch(PDO::FETCH_OBJ);
+		}
+		// libère les ressources du jeu de données
+		$req->closeCursor();
+		// fourniture de la collection
+		return $lesSalles;
 	}
 
 	
