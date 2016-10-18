@@ -69,7 +69,7 @@
 						<input type="checkbox" name="caseAfficherMdp" id="caseAfficherMdp" onclick="afficherMdp();" data-mini="true" <?php if ($afficherMdp == 'on') echo 'checked'; ?>  >
 					</div>
 					<div data-role="fieldcontain">
-						<input type="submit" name="btnCrerUtilisateur" id="btnCrerUtilisateur" value="Envoyer les données" data-mini="true">
+						<input type="submit" name="btnChangerDeMdp" id="btnChangerDeMdp" value="Envoyer les données" data-mini="true">
 					</div>
 				</form>
 

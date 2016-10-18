@@ -1,5 +1,5 @@
 <?php
-if ( ! isset ($_POST ["btnCrerUtilisateur"]) == true) {
+if ( ! isset ($_POST ["btnChangerDeMdp"]) == true) {
 	// si les données n'ont pas été postées, c'est le premier appel du formulaire : affichage de la vue sans message d'erreur
 	
 	$mdp = '';
