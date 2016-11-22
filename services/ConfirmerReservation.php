@@ -82,7 +82,7 @@ else
 											$laSalle = $laReservation->getRoom_name();
 											$leDigicode = $laReservation->getDigicode();
 											
-											$sujet = "COnfirmation de réservation";
+											$sujet = "Confirmation de réservation";
 											$contenuMail = "Voici les données concernant votre réservation :\n\n";
 											$contenuMail .= "Date et heure de la réservation : " . $laDate . "\n";
 											$contenuMail .= "La salle : " . $laSalle . "\n";
