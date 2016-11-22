@@ -3,7 +3,7 @@
 // Ecrit le 22/11/2016 par Tony
 // Modifié le
 
-// Ce service web permet à un administrateur authentifié d'enregistrer un nouvel utilisateur
+// Ce service web permet d'annuler une reservatio,
 // et fournit un compte-rendu d'exécution
 
 // Le service web doit être appelé avec 3 paramètres : nomUser, mdpUser, numReservation
