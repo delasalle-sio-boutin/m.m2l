@@ -59,17 +59,21 @@ else {
 						$msg = "Erreur : nom d'utilisateur inexistant.";
 					}
 					else {
-							$lesReservations = $dao->getLesReservations($nom);
-							if ($lesReservations != 0) 
+							$lesReservations = $dao->getLesReservations($name);
+							if (sizeof($lesReservations) != 0) 
 							{
 								$msg = "Erreur : cet utilisateur a passé des réservations à venir.";
 							}
-							else {	
-								// envoi d'un mail de confirmation de l'enregistrement
+							else {									
+								$utilisateur = $dao->getUtilisateur($name);
+								$email = $utilisateur->getEmail();
+								
+								$dao->supprimerUtilisateur($name);
+								// envoi d'un mail de confirmation de la suppression
 								$sujet = "Suppression de votre compte dans le système de réservation de M2L";
 								$contenuMail = "L'administrateur du système de réservations de la M2L vient de supprimer votre compte utilisateur.\n\n";
 								
-								$ok = Outils::envoyerMail($email, $sujet, $contenuMail, $ADR_MAIL_EMETTEUR);
+								$ok = Outils::envoyerMail($email, $sujet, $contenuMail, "delasalle.sio.eleve.e@gmail.com");
 								if ( ! $ok ) {
 									// l'envoi de mail a échoué
 									$msg = "Suppression  effectuée ; l'envoi du mail à l'utilisateur a rencontré un problème.";
