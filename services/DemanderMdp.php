@@ -44,8 +44,7 @@ else
 		$password = Outils::creerMdp();
 		$dao->modifierMdpUser($nom, $password);
 		$level = $dao->getNiveauUtilisateur($nom, $password);
-		
-		
+
 		$sujet = "Votre nouveau mot de passe";
 		$contenuMail = "Voici les nouvelles données vous concernant :\n\n";
 		$contenuMail .= "Votre nom : " . $nom . "\n";
