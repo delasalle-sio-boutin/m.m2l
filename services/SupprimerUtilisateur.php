@@ -73,7 +73,7 @@ else {
 								$sujet = "Suppression de votre compte dans le système de réservation de M2L";
 								$contenuMail = "L'administrateur du système de réservations de la M2L vient de supprimer votre compte utilisateur.\n\n";
 								
-								$ok = Outils::envoyerMail($email, $sujet, $contenuMail, "delasalle.sio.eleve.e@gmail.com");
+								$ok = Outils::envoyerMail($email, $sujet, $contenuMail, $ADR_MAIL_EMETTEUR);
 								if ( ! $ok ) {
 									// l'envoi de mail a échoué
 									$msg = "Suppression  effectuée ; l'envoi du mail à l'utilisateur a rencontré un problème.";
