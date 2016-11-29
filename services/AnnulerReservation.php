@@ -81,12 +81,25 @@ if ($nomUser == "" || $mdpUser == "" || $idReservation == "") {
 				if ($laDateReservation <= time ()) {
 					$msg = "Erreur : cette réservation est déjà passée.";
 				}
-				else{
+				else {
+						$unUtilisateur = $dao->getUtilisateur($nomUser);
+						$adrMail = $unUtilisateur->getEmail();
+						$sujet = "Confirmation d'annulation";
+						$contenuMail = "Votre réservation a bien été annulée";
 						
-						
-					$msg = "Enregistrement effectué ; vous allez recevoir un mail de confirmation.";
-					$dao->annulerReservation($idReservation);
+						$outils = new Outils();
+						$ok = $outils->envoyerMail($adrMail, $sujet, $contenuMail, $ADR_MAIL_EMETTEUR);
+					if ( ! $ok ) {
+						$dao->annulerReservation($idReservation);
+						$msg = "Enregistrement effectué ; l'envoi du mail de confirmation a rencontré un problème.";
+					}
+					else {
+						$dao->annulerReservation($idReservation);
+						$msg = "Enregistrement effectué ; vous allez recevoir un mail de confirmation.";
+					}
+				
 				}
+				
 			}
 		}
 	}
