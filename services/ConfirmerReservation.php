@@ -40,7 +40,7 @@ else
 {	// connexion du serveur web à la base MySQL ("include_once" peut être remplacé par "require_once")
 	include_once ('../modele/DAO.class.php');
 	$dao = new DAO();
-	
+	$dao->creerLesDigicodesManquants();
 	$niveauUtilisateur = $dao->getNiveauUtilisateur($nom, $mdp);
 	$unUtilisateur = $dao->getUtilisateur($nom);
 	

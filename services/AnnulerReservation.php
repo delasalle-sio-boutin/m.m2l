@@ -8,7 +8,7 @@
 
 // Le service web doit être appelé avec 3 paramètres : nomUser, mdpUser, numReservation
 // Les paramètres peuvent être passés par la méthode GET (pratique pour les tests, mais à éviter en exploitation) :
-// http://<hébergeur>/CreerUtilisateur.php?nomUser=admin&mdpUser=admin&numReservation=
+// http://<hébergeur>/CreerUtilisateur.php?nomUser=admin&mdpUser=admin&idReservation=
 
 // Les paramètres peuvent être passés par la méthode POST (à privilégier en exploitation pour la confidentialité des données) :
 // http://<hébergeur>/CreerUtilisateur.php
@@ -24,10 +24,12 @@ if (empty ( $_GET ["nomUser"] ) == true)
 	$nomUser = "";
 else
 	$nomUser = $_GET ["nomUser"];
+
 if (empty ( $_GET ["mdpUser"] ) == true)
 	$mdpUser = "";
 else
 	$mdpUser = $_GET ["mdpUser"];
+
 if (empty ( $_GET ["idReservation"] ) == true)
 	$idReservation = "";
 else
@@ -44,10 +46,10 @@ if ($nomUser == "" && $mdpUser == "" && $idReservation == "") {
 		$mdpUser = "";
 	else
 		$mdpUser = $_POST ["mdpUser"];
-	if (empty ( $_POST ["numReservation"] ) == true)
+	if (empty ( $_POST ["idReservation"] ) == true)
 		$idReservation = "";
 	else
-		$idReservation = $_POST ["numReservation"];
+		$idReservation = $_POST ["idReservation"];
 }
 // Contrôle de la présence des paramètres
 if ($nomUser == "" || $mdpUser == "" || $idReservation == "") {
@@ -56,6 +58,7 @@ if ($nomUser == "" || $mdpUser == "" || $idReservation == "") {
 	// connexion du serveur web à la base MySQL ("include_once" peut être remplacé par "require_once")
 	include_once ('../modele/DAO.class.php');
 	$dao = new DAO ();
+	$dao->creerLesDigicodesManquants();
 	
 	if ($dao->getNiveauUtilisateur ( $nomUser, $mdpUser ) == "inconnu") {
 		$msg = "Erreur : authentification incorrecte.";
@@ -71,7 +74,9 @@ if ($nomUser == "" || $mdpUser == "" || $idReservation == "") {
 			} else {
 				
 				$laReservation = $dao->getReservation( $idReservation);
-				$laDateReservation = $laReservation->getEnd_time ();
+				
+				$laDateReservation = $laReservation->getStart_time();
+				
 				
 				if ($laDateReservation <= time ()) {
 					$msg = "Erreur : cette réservation est déjà passée.";
