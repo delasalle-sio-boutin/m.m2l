@@ -73,12 +73,7 @@ class DAO
 
 	// ------------------------------------------------------------------------------------------------------
 	// -------------------------------------- Méthodes d'instances ------------------------------------------
-	// ------------------------------------------------------------------------------------------------------
-
-	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
-	// cette fonction peut dépanner en cas d'absence des triggers chargés de créer les digicodes
-	// modifié par Jim le 5/5/2015
-	
+	// ------------------------------------------------------------------------------------------------------	
 	
 	// annule la réservation
 	// modifié par Erwann Bienvenu le 11/10/2016
@@ -140,7 +135,9 @@ class DAO
 		return $ok;
 	}
 	
-	
+	// mise à jour de la table mrbs_entry_digicode (si besoin) pour créer les digicodes manquants
+	// cette fonction peut dépanner en cas d'absence des triggers chargés de créer les digicodes
+	// modifié par Jim le 5/5/2015
 	public function creerLesDigicodesManquants()
 	{	// préparation de la requete de recherche des réservations sans digicode
 		$txt_req1 = "Select id from mrbs_entry where id not in (select id from mrbs_entry_digicode)";
